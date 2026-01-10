@@ -50,13 +50,12 @@ const colors = [Blue, Green, Yellow, Red]
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-pub fn new(seed: Seed, players: List(String)) -> Decider {
+pub fn new(players: List(String)) -> Decider {
   let players = list.map(players, Player(name: _, hand: []))
   decider.Decider(
     decide:,
     evolve:,
     initial_state: SettingUp(deck: build_deck(), players:),
-    seed:,
   )
 }
 

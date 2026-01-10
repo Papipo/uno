@@ -3,17 +3,18 @@ import decider.{type Decider}
 import gleam/list
 import gleam/string
 import gleeunit
-import prng/seed
+import prng/seed.{type Seed}
 import uno
 
 fn verify(
   scenario scenario: Scenario(command, state, event),
   decider decider: Decider(command, state, event, error),
-) -> #(state, seed.Seed) {
+  seed seed: Seed,
+) -> #(state, Seed) {
   let #(state, seed) = {
     use #(state, seed), event <- list.fold(scenario.given, #(
       decider.initial_state,
-      decider.seed,
+      seed,
     ))
     decider.evolve(state, event, seed)
   }
@@ -31,13 +32,13 @@ pub fn main() -> Nil {
 pub fn setup_test() {
   let players = ["Sara", "Rodri", "Gael", "Mario"]
   let seed = seed.new(1)
-  let decider = uno.new(seed, players)
+  let decider = uno.new(players)
 
-  let #(state, _new_seed) =
+  let #(state, _seed) =
     Scenario(name: "setup test", given: [], when: uno.Start, then: [
       uno.GameStarted,
     ])
-    |> verify(decider)
+    |> verify(decider, seed)
 
   uno.player_names(state)
   |> string.join(",")
