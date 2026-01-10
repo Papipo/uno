@@ -1,0 +1,7 @@
+---
+version: 1.5.3
+title: Randomized players
+file: ./test/uno_test.gleam
+test_name: setup_test
+---
+Rodri,Mario,Gael,Sara

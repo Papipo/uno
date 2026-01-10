@@ -1,0 +1,7 @@
+---
+version: 1.5.3
+title: Initial discard
+file: ./test/uno_test.gleam
+test_name: setup_test
+---
+Card(Red, 6)
