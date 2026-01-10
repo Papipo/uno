@@ -10,24 +10,52 @@ pub fn main() -> Nil {
   gleeunit.main()
 }
 
-pub fn setup_test() {
-  let state =
-    uno()
-    |> given([])
-    |> when(uno.Start)
-    |> then([uno.GameStarted])
+pub fn deck_suffled_test() {
+  let scenario = decider() |> given([uno.DeckShuffled])
 
-  uno.player_names(state)
-  |> string.join(",")
-  |> birdie.snap("Randomized players")
-
-  let assert Ok(discard) = uno.discard(state)
-  birdie.snap(discard |> string.inspect, "Initial discard")
-
-  uno.deck_cards(state)
+  scenario.state
+  |> uno.deck_cards()
   |> list.map(string.inspect)
   |> string.join(",")
-  |> birdie.snap("Randomized deck")
+  |> birdie.snap("Shuffled deck")
+}
+
+pub fn player_order_randomized_test() {
+  let scenario = decider() |> given([uno.PlayerOrderRandomized])
+
+  uno.player_names(scenario.state)
+  |> string.join(",")
+  |> birdie.snap("Player order randomized")
+}
+
+pub fn game_started_test() {
+  let scenario = decider() |> given([uno.GameStarted])
+  let assert Ok(discard) = uno.discard(scenario.state)
+
+  discard
+  |> string.inspect
+  |> birdie.snap("Initial discard")
+}
+
+pub fn initial_hands_drawn_test() {
+  let scenario = decider() |> given([uno.InitialHandsDrawn])
+
+  assert scenario.state
+    |> uno.players()
+    |> list.map(uno.hand_size)
+    == [7, 7, 7, 7]
+}
+
+pub fn setup_test() {
+  decider()
+  |> given([])
+  |> when(uno.Start)
+  |> then([
+    uno.DeckShuffled,
+    uno.PlayerOrderRandomized,
+    uno.InitialHandsDrawn,
+    uno.GameStarted,
+  ])
 }
 
 type Scenario(command, state, event, error) {
@@ -70,7 +98,7 @@ fn then(scenario: Scenario(command, state, event, error), events: List(event)) {
   state
 }
 
-fn uno() {
+fn decider() {
   let players = ["Sara", "Rodri", "Gael", "Mario"]
   uno.new(players)
 }

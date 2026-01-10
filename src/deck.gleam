@@ -1,3 +1,4 @@
+import gleam/result
 import internal
 import prng/random
 import prng/seed
@@ -31,5 +32,19 @@ pub fn draw(deck: Deck(a)) {
   case deck.cards {
     [card, ..rest] -> Ok(#(card, Deck(rest)))
     [] -> Error(EmptyDeck)
+  }
+}
+
+pub fn draw_many(deck: Deck(card), amount: Int) {
+  draw_many_loop(deck, amount, [])
+}
+
+fn draw_many_loop(deck: Deck(card), amount: Int, drawn: List(card)) {
+  case amount > 0 {
+    True -> {
+      use #(card, deck) <- result.try(draw(deck))
+      draw_many_loop(deck, amount - 1, [card, ..drawn])
+    }
+    False -> #(drawn, deck) |> Ok
   }
 }

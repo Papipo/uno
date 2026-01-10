@@ -1,7 +1,7 @@
 ---
 version: 1.5.3
-title: Randomized players
+title: Player order randomized
 file: ./test/uno_test.gleam
-test_name: setup_test
+test_name: player_order_randomized_test
 ---
 Rodri,Mario,Gael,Sara

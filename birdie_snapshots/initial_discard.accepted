@@ -2,6 +2,6 @@
 version: 1.5.3
 title: Initial discard
 file: ./test/uno_test.gleam
-test_name: setup_test
+test_name: game_started_test
 ---
-Card(Red, 6)
+Card(Red, 2)

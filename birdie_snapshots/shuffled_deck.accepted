@@ -1,0 +1,7 @@
+---
+version: 1.5.3
+title: Shuffled deck
+file: ./test/uno_test.gleam
+test_name: deck_suffled_test
+---
+Card(Red, 2),Card(Blue, 0),Card(Red, 8),Card(Blue, 1),Card(Blue, 6),Reverse(Blue),Skip(Red),Card(Yellow, 2),WildDraw,Draw(Blue),Card(Red, 6),Card(Green, 6),Card(Blue, 2),Card(Red, 4),Reverse(Yellow),Skip(Red),Card(Red, 5),Card(Yellow, 7),Card(Yellow, 9),Card(Yellow, 6),Card(Red, 2),Skip(Blue),Reverse(Green),Card(Green, 4),Card(Red, 1),Card(Yellow, 9),Card(Blue, 6),Skip(Green),Reverse(Green),Card(Yellow, 1),Card(Blue, 3),WildDraw,Card(Green, 7),Draw(Red),Card(Green, 2),Card(Green, 0),Card(Red, 3),Draw(Yellow),Card(Green, 9),Card(Green, 1),WildDraw,Card(Red, 0),WildDraw,Card(Blue, 9),Card(Blue, 7),Card(Yellow, 2),Skip(Yellow),Card(Blue, 4),Card(Yellow, 3),Card(Yellow, 4),Card(Yellow, 1),Card(Blue, 2),Reverse(Yellow),Skip(Yellow),Card(Green, 3),Card(Yellow, 5),Card(Green, 3),Card(Green, 8),Card(Yellow, 8),Card(Green, 5),Card(Red, 7),Draw(Blue),Card(Blue, 1),Card(Red, 3),Card(Blue, 4),Card(Red, 9),Card(Yellow, 4),Card(Blue, 5),Card(Yellow, 3),Card(Blue, 7),Card(Green, 1),Card(Yellow, 5),Card(Red, 9),Card(Yellow, 6),Draw(Yellow),Reverse(Blue),Card(Blue, 8),Card(Green, 6),Draw(Red),Card(Yellow, 8),Card(Red, 5),Card(Red, 7),Draw(Green),Card(Red, 1),Card(Red, 8),Wild,Card(Green, 4),Card(Yellow, 0),Skip(Blue),Card(Green, 8),Skip(Green),Draw(Green),Reverse(Red),Card(Red, 6),Card(Green, 5),Card(Blue, 3),Card(Blue, 5),Card(Blue, 8),Card(Red, 4),Card(Green, 2),Card(Blue, 9),Reverse(Red),Card(Green, 7),Card(Yellow, 7),Wild,Card(Green, 9),Wild,Wild

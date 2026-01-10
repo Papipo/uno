@@ -1,7 +1,0 @@
----
-version: 1.5.3
-title: Randomized deck
-file: ./test/uno_test.gleam
-test_name: setup_test
----
-Card(Blue, 1),Draw(Blue),Card(Blue, 5),Card(Green, 1),Draw(Green),WildDraw,Card(Yellow, 6),Skip(Yellow),Card(Blue, 1),Card(Yellow, 1),Card(Blue, 6),Card(Red, 8),Draw(Red),Reverse(Blue),Card(Red, 9),Card(Red, 2),Card(Red, 4),Card(Red, 1),Card(Red, 6),Reverse(Green),Draw(Yellow),Card(Green, 8),Card(Red, 5),Card(Red, 4),Card(Green, 1),Reverse(Yellow),Draw(Yellow),Card(Yellow, 5),Card(Blue, 7),WildDraw,Card(Yellow, 2),Card(Yellow, 0),WildDraw,Card(Blue, 0),Card(Green, 6),Card(Blue, 2),Card(Red, 7),Wild,Card(Yellow, 4),Card(Green, 5),WildDraw,Card(Blue, 4),Card(Green, 4),Card(Green, 0),Card(Green, 2),Card(Yellow, 6),Reverse(Red),Card(Blue, 8),Card(Yellow, 7),Card(Yellow, 8),Card(Yellow, 5),Card(Blue, 6),Draw(Red),Reverse(Red),Card(Green, 7),Card(Yellow, 9),Card(Green, 7),Card(Yellow, 3),Card(Red, 3),Card(Green, 9),Reverse(Blue),Skip(Yellow),Card(Blue, 5),Card(Red, 7),Card(Blue, 8),Card(Blue, 4),Card(Yellow, 8),Card(Blue, 9),Card(Yellow, 7),Card(Green, 2),Card(Green, 5),Card(Yellow, 9),Skip(Green),Card(Red, 1),Skip(Blue),Draw(Green),Card(Green, 3),Card(Yellow, 1),Skip(Green),Card(Red, 3),Card(Red, 9),Card(Blue, 2),Skip(Red),Card(Red, 5),Card(Blue, 3),Card(Green, 8),Card(Blue, 3),Reverse(Green),Card(Yellow, 3),Reverse(Yellow),Skip(Red),Draw(Blue),Skip(Blue),Card(Green, 9),Card(Red, 0),Card(Blue, 7),Card(Blue, 9),Card(Green, 3),Card(Red, 8),Card(Green, 6),Card(Green, 4),Wild,Card(Yellow, 2),Card(Red, 2),Wild,Card(Yellow, 4),Wild
