@@ -19,7 +19,7 @@ pub fn from_list(list: List(card)) -> Hand(card) {
 pub fn remove(hand: Hand(card), card card) {
   case iv.find_index(hand.cards, fn(x) { x == card }) {
     Ok(index) -> iv.try_delete(hand.cards, index) |> Hand
-    Error(_) -> hand
+    Error(_) -> panic as "Card is not in hand"
   }
 }
 

@@ -125,12 +125,6 @@ fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
       #(Playing(discard:, deck:, players:), seed)
     }
 
-    // Playing(deck:, players:, discard:), CardPlayed(card) -> {
-    //   // remove card from current player hand
-    //   // put in on discard
-    //   // apply effect, if any
-    //   // next player
-    // }
     Playing(..), CardPlayed(card) -> {
       let assert [current_player, ..players] = state.players
       let hand = hand.remove(current_player.hand, card)
