@@ -3,6 +3,7 @@ import deck.{type Deck}
 import gleam/list
 import gleam/result
 import internal
+import iv
 import prng/random
 import prng/seed.{type Seed}
 
@@ -11,6 +12,7 @@ type Decider =
 
 pub type Command {
   Start
+  PlayCard(Card)
 }
 
 pub opaque type State {
@@ -23,15 +25,18 @@ pub type Event {
   PlayerOrderRandomized
   GameStarted
   InitialHandsDrawn
+  CardPlayed(Card)
+  TurnEnded
 }
 
 pub type Error {
   AlreadyStarted
   GameNotStartedYet
+  CardNotInHand
 }
 
 pub type Player {
-  Player(name: String, hand: List(Card))
+  Player(name: String, hand: iv.Array(Card))
 }
 
 pub type Card {
@@ -59,7 +64,7 @@ const colors: List(Color) = [Blue, Green, Yellow, Red]
 const numbers: List(Int) = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 pub fn new(players: List(String)) -> Decider {
-  let players = list.map(players, Player(name: _, hand: []))
+  let players = list.map(players, Player(name: _, hand: iv.new()))
   decider.Decider(
     decide:,
     evolve:,
@@ -75,9 +80,20 @@ fn decide(
   case state, command {
     SettingUp(..), Start(..) ->
       Ok([DeckShuffled, PlayerOrderRandomized, InitialHandsDrawn, GameStarted])
-
+    Playing(..), PlayCard(card) -> {
+      case current_player(state).hand |> iv.contains(card) {
+        True -> [CardPlayed(card), TurnEnded] |> Ok
+        False -> Error(CardNotInHand)
+      }
+    }
     Playing(..), Start(..) -> Error(AlreadyStarted)
+    SettingUp(..), PlayCard(_) -> Error(GameNotStartedYet)
   }
+}
+
+pub fn current_player(state: State) {
+  let assert Ok(player) = state.players |> list.first
+  player
 }
 
 fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
@@ -93,8 +109,8 @@ fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
     SettingUp(deck:, players:), InitialHandsDrawn -> {
       let result = {
         use #(deck, players), player <- list.try_fold(players, #(deck, []))
-        use #(hand, deck) <- result.try(deck.draw_many(deck, 7))
-        let player = Player(..player, hand:)
+        use #(drawn, deck) <- result.try(deck.draw_many(deck, 7))
+        let player = Player(..player, hand: iv.from_list(drawn))
         #(deck, [player, ..players]) |> Ok
       }
 
@@ -109,10 +125,33 @@ fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
       #(Playing(discard:, deck:, players:), seed)
     }
 
+    // Playing(deck:, players:, discard:), CardPlayed(card) -> {
+    //   // remove card from current player hand
+    //   // put in on discard
+    //   // apply effect, if any
+    //   // next player
+    // }
+    Playing(..), CardPlayed(card) -> {
+      let assert [current_player, ..players] = state.players
+      let hand = remove_first(current_player.hand, card)
+      let current_player = Player(..current_player, hand:)
+      let players = [current_player, ..players]
+      let discard =
+        Discard(latest: card, rest: [state.discard.latest, ..state.discard.rest])
+      let state = Playing(..state, discard:, players:)
+      #(state, seed)
+    }
+    Playing(..), TurnEnded -> {
+      let assert [current_player, ..rest] = state.players
+      let players = list.append(rest, [current_player])
+      #(Playing(..state, players:), seed)
+    }
     Playing(..), GameStarted -> panic as "Already playing"
     Playing(..), DeckShuffled -> panic as "Already playing"
     Playing(..), PlayerOrderRandomized -> panic as "Already playing"
     Playing(..), InitialHandsDrawn -> panic as "Already playing"
+    SettingUp(..), CardPlayed(..) -> panic as "Not playing yet"
+    SettingUp(..), TurnEnded(..) -> panic as "Not playing yet"
   }
 }
 
@@ -155,7 +194,7 @@ pub fn player_names(state: State) -> List(String) {
   player.name
 }
 
-pub fn discard(state: State) {
+pub fn top_discard(state: State) {
   case state {
     SettingUp(..) -> Error(GameNotStartedYet)
     Playing(discard:, ..) -> Ok(discard.latest)
@@ -171,5 +210,42 @@ pub fn players(state: State) -> List(Player) {
 }
 
 pub fn hand_size(player: Player) -> Int {
-  player.hand |> list.length
+  player.hand |> iv.size
+}
+
+@internal
+pub fn add_card_to_current_player_hand(card: Card) {
+  fn(state: State) {
+    let assert [current, ..rest] = state.players
+    let current = Player(..current, hand: iv.append(current.hand, card))
+    let players = [current, ..rest]
+    case state {
+      SettingUp(..) -> SettingUp(..state, players:)
+      Playing(..) -> Playing(..state, players:)
+    }
+  }
+}
+
+@internal
+pub fn add_card_to_discard(card: Card) {
+  fn(state: State) {
+    case state {
+      SettingUp(..) -> panic as "Can't add_card_to_discard during setup"
+      Playing(discard:, ..) -> {
+        let discard = Discard(card, [discard.latest, ..discard.rest])
+        Playing(..state, discard:)
+      }
+    }
+  }
+}
+
+pub fn remove_first(from items: iv.Array(a), element elem: a) {
+  case iv.find_index(items, fn(x) { x == elem }) {
+    Ok(index) -> iv.try_delete(items, index)
+    Error(_) -> items
+  }
+}
+
+pub fn player_name(player: Player) -> String {
+  player.name
 }

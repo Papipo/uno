@@ -19,6 +19,7 @@ packages = [
   { name = "gleeunit", version = "1.9.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "DA9553CE58B67924B3C631F96FE3370C49EB6D6DC6B384EC4862CC4AAA718F3C" },
   { name = "glexer", version = "2.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "splitter"], otp_app = "glexer", source = "hex", outer_checksum = "40A1FB0919FA080AD6C5809B4C7DBA545841CAAC8168FACDFA0B0667C22475CC" },
   { name = "global_value", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "global_value", source = "hex", outer_checksum = "23F74C91A7B819C43ABCCBF49DAD5BB8799D81F2A3736BA9A534BD47F309FF4F" },
+  { name = "iv", version = "1.4.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "gleam_yielder"], otp_app = "iv", source = "hex", outer_checksum = "724100253DF130F19A32D683CBC41665C42E66AECBFA06CEE628FD426CF4F0C7" },
   { name = "justin", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "justin", source = "hex", outer_checksum = "7FA0C6DB78640C6DC5FBFD59BF3456009F3F8B485BF6825E97E1EB44E9A1E2CD" },
   { name = "prng", version = "4.0.1", build_tools = ["gleam"], requirements = ["gleam_bitwise", "gleam_stdlib", "gleam_yielder"], otp_app = "prng", source = "hex", outer_checksum = "695AB70E4BE713042062E901975FC08D1EC725B85B808D4786A14C406ADFBCF1" },
   { name = "rank", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "rank", source = "hex", outer_checksum = "5660E361F0E49CBB714CC57CC4C89C63415D8986F05B2DA0C719D5642FAD91C9" },
@@ -33,4 +34,5 @@ packages = [
 birdie = { version = ">= 1.5.3 and < 2.0.0" }
 gleam_stdlib = { version = ">= 0.44.0 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
+iv = { version = ">= 1.4.0 and < 2.0.0" }
 prng = { version = ">= 4.0.1 and < 5.0.0" }
