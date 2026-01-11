@@ -2,8 +2,8 @@ import decider
 import deck.{type Deck}
 import gleam/list
 import gleam/result
+import hand.{type Hand}
 import internal
-import iv
 import prng/random
 import prng/seed.{type Seed}
 
@@ -36,7 +36,7 @@ pub type Error {
 }
 
 pub type Player {
-  Player(name: String, hand: iv.Array(Card))
+  Player(name: String, hand: Hand(Card))
 }
 
 pub type Card {
@@ -64,7 +64,7 @@ const colors: List(Color) = [Blue, Green, Yellow, Red]
 const numbers: List(Int) = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 pub fn new(players: List(String)) -> Decider {
-  let players = list.map(players, Player(name: _, hand: iv.new()))
+  let players = list.map(players, Player(name: _, hand: hand.new()))
   decider.Decider(
     decide:,
     evolve:,
@@ -81,7 +81,7 @@ fn decide(
     SettingUp(..), Start(..) ->
       Ok([DeckShuffled, PlayerOrderRandomized, InitialHandsDrawn, GameStarted])
     Playing(..), PlayCard(card) -> {
-      case current_player(state).hand |> iv.contains(card) {
+      case current_player(state).hand |> hand.contains(card) {
         True -> [CardPlayed(card), TurnEnded] |> Ok
         False -> Error(CardNotInHand)
       }
@@ -110,7 +110,7 @@ fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
       let result = {
         use #(deck, players), player <- list.try_fold(players, #(deck, []))
         use #(drawn, deck) <- result.try(deck.draw_many(deck, 7))
-        let player = Player(..player, hand: iv.from_list(drawn))
+        let player = Player(..player, hand: hand.from_list(drawn))
         #(deck, [player, ..players]) |> Ok
       }
 
@@ -133,7 +133,7 @@ fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
     // }
     Playing(..), CardPlayed(card) -> {
       let assert [current_player, ..players] = state.players
-      let hand = remove_first(current_player.hand, card)
+      let hand = hand.remove(current_player.hand, card)
       let current_player = Player(..current_player, hand:)
       let players = [current_player, ..players]
       let discard =
@@ -210,14 +210,14 @@ pub fn players(state: State) -> List(Player) {
 }
 
 pub fn hand_size(player: Player) -> Int {
-  player.hand |> iv.size
+  player.hand |> hand.size
 }
 
 @internal
 pub fn add_card_to_current_player_hand(card: Card) {
   fn(state: State) {
     let assert [current, ..rest] = state.players
-    let current = Player(..current, hand: iv.append(current.hand, card))
+    let current = Player(..current, hand: hand.add(current.hand, card))
     let players = [current, ..rest]
     case state {
       SettingUp(..) -> SettingUp(..state, players:)
@@ -236,13 +236,6 @@ pub fn add_card_to_discard(card: Card) {
         Playing(..state, discard:)
       }
     }
-  }
-}
-
-pub fn remove_first(from items: iv.Array(a), element elem: a) {
-  case iv.find_index(items, fn(x) { x == elem }) {
-    Ok(index) -> iv.try_delete(items, index)
-    Error(_) -> items
   }
 }
 
