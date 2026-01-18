@@ -140,12 +140,14 @@ fn evolve(state: State, event: Event, seed: Seed) -> #(State, Seed) {
       let players = list.append(rest, [current_player])
       #(Playing(..state, players:), seed)
     }
-    Playing(..), GameStarted -> panic as "Already playing"
-    Playing(..), DeckShuffled -> panic as "Already playing"
-    Playing(..), PlayerOrderRandomized -> panic as "Already playing"
-    Playing(..), InitialHandsDrawn -> panic as "Already playing"
-    SettingUp(..), CardPlayed(..) -> panic as "Not playing yet"
-    SettingUp(..), TurnEnded(..) -> panic as "Not playing yet"
+    Playing(..), GameStarted
+    | Playing(..), DeckShuffled
+    | Playing(..), PlayerOrderRandomized
+    | Playing(..), InitialHandsDrawn
+    -> panic as "Already playing"
+
+    SettingUp(..), CardPlayed(..) | SettingUp(..), TurnEnded(..) ->
+      panic as "Not playing yet"
   }
 }
 
